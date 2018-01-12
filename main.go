@@ -25,7 +25,6 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("lets go", exPath)
 	buf, err := ioutil.ReadFile(exPath + "/VHostTemplate.conf")
 	if err != nil {
 		panic(err)
@@ -38,10 +37,14 @@ func main() {
 	file = strings.Replace(file, "{{.URL}}", data.URL, -1)
 	file = strings.Replace(file, "{{.DOCKERPORT}}", data.DOCKERPORT, -1)
 	newFilename := strings.Replace(data.URL, ".", "_", -1)
-	f, err := os.Create(newFilename + ".conf")
+	newFilename = newFilename + ".conf"
+	f, err := os.Create(newFilename)
 	w := bufio.NewWriter(f)
-	n4, err := w.WriteString(file)
-	fmt.Println("Generate VHost file", n4)
+	_, err = w.WriteString(file)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(newFilename)
 	w.Flush()
 
 }
