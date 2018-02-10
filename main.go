@@ -17,7 +17,7 @@ type Values struct {
 
 func main() {
 	if len(os.Args) == 1 || os.Args[1] == "--help" {
-		fmt.Println("Usage: Command {URL} {dockerport}")
+		fmt.Println("Usage: Command {URL} {dockerport} {TemplateFile(optional)}")
 		return
 	}
 	ex, err := os.Executable()
@@ -25,8 +25,11 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	buf, err := ioutil.ReadFile(exPath + "/VHostTemplate.conf")
+	templateFile := exPath + "/VHostTemplate.conf"
+	if os.Args[3] != "" {
+		templateFile = os.Args[3]
+	}
+	buf, err := ioutil.ReadFile(templateFile)
 	if err != nil {
 		panic(err)
 	}
